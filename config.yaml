@@ -1,0 +1,13 @@
+n_samples: 1500
+noise: 0.005
+
+visual:
+  size: 2
+  marker: "."
+  
+
+datasets:
+  type: 
+    - "blobs"
+    - "moons"
+    - "circles"
