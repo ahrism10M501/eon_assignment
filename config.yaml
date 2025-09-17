@@ -1,8 +1,10 @@
+mode: 3
+
 n_samples: 1500
 noise: 0.005
 
 visual:
-  size: 2
+  size: 5
   marker: "."
   
 

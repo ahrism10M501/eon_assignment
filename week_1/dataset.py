@@ -57,7 +57,7 @@ class MakeDataset:
             raise ValueError(f"Unknown dataset type: {dataset_type}. Choose from: {list(self.dataset_map.keys())}")
         
      
-def visualization2D(datasets_to_plot):
+def visualization2D(datasets_to_plot, visual_param):
     # Plot each dataset in a separate subplot
     num_datasets = len(datasets_to_plot)
     fig, axes = plt.subplots(1, num_datasets, figsize=(5 * num_datasets, 5))
@@ -77,12 +77,14 @@ def visualization2D(datasets_to_plot):
                     points[legend == y_val, 0],
                     points[legend == y_val, 1],
                     color=colors[int(y_val)],
-                    label=f"Class {int(y_val)}"
+                    label=f"Class {int(y_val)}",
+                    s=visual_param['size'],
+                    marker=visual_param['marker']
                 )
             ax.legend()
         else:
             # Use a colormap for continuous labels like S-Curve and Swiss Roll - 이건 3D로 표시해야 제대로 나오겠다.
-            scatter = ax.scatter(points[:, 0], points[:, 1], c=legend, cmap='viridis')
+            scatter = ax.scatter(points[:, 0], points[:, 1], c=legend, cmap='viridis', s=visual_param['size'])
             fig.colorbar(scatter, ax=ax, label='Label (Continuous)')
             
         ax.set_title(f"Dataset: {dataset_type.capitalize()}")
@@ -92,14 +94,24 @@ def visualization2D(datasets_to_plot):
         
     plt.tight_layout()
     plt.show()
-     
+    
+def save_txt(datasets_to_plot):
+    for i, (data_type, points, legend) in enumerate(datasets_to_plot):
+        with open(f"dataset_{data_type.capitalize()}.txt", "w") as f:
+            x, y = points.shape
+            f.write(f"{x}, {y+1} \n")
+            for (x, y), l in zip(points, legend):
+                f.write(f"{x}, {y}, {l} \n")
+
 if __name__ == "__main__":
     with open('config.yaml', 'r') as f:
         config = yaml.safe_load(f)
     
+    exec_mode = int(config['mode']) # 비트마스크
     n_samples = config['n_samples']
     noise = config['noise']
-
+    visual_param = config['visual']
+    
     dataset_factory = MakeDataset(n_samples, noise)
     
     datasets_to_plot = []
@@ -109,13 +121,12 @@ if __name__ == "__main__":
         datasets_to_plot.append((dataset_type, points, legend))
     num_datasets = len(datasets_to_plot)
     
-    # visualization2D(datasets_to_plot)
-    
-    # save to txt file
-    for i, (data_type, points, legend) in enumerate(datasets_to_plot):
-        with open(f"dataset_{data_type.capitalize()}.txt", "w") as f:
-            x, y = points.shape
-            f.write(f"{x}, {y+1} \n")
-            for (x, y), l in zip(points, legend):
-                f.write(f"{x}, {y}, {l} \n")
+    # 비트 마스킹
+    if exec_mode & 1:
+        # visualization
+        visualization2D(datasets_to_plot, visual_param)
+        
+    if exec_mode & 2:
+        # save to txt file, easy to read in C
+        save_txt(datasets_to_plot)
     
