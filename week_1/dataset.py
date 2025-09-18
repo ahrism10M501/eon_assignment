@@ -17,9 +17,8 @@ class Dataset(abc.ABC):
 
 # Concrete dataset classes
 class Blobs(Dataset):
-    def making(self):
+    def making(self): # 빨간줄 그어지는거 어케 해결하지 괜히 팩토리를 만들었나..?
         return make_blobs(n_samples=self.n_samples, random_state=8)
-
 class Moons(Dataset):
     def making(self):
         return make_moons(n_samples=self.n_samples, noise=self.noise, random_state=8)
@@ -48,7 +47,8 @@ class MakeDataset:
     def __init__(self, n_samples: int, noise: float):
         self.n_samples = n_samples
         self.noise = noise
-        
+    
+    # 이거 없앨까? 귀찮은데, 초기화 할 떄 바로 주면 안 되나? iter 넣을까?
     def make(self, dataset_type: str) -> Dataset:
         dataset_class = self.dataset_map.get(dataset_type.lower())
         if dataset_class:
@@ -56,7 +56,7 @@ class MakeDataset:
         else:
             raise ValueError(f"Unknown dataset type: {dataset_type}. Choose from: {list(self.dataset_map.keys())}")
         
-     
+# 귀찮으니 Gemini에게 맡기자
 def visualization2D(datasets_to_plot, visual_param):
     # Plot each dataset in a separate subplot
     num_datasets = len(datasets_to_plot)
