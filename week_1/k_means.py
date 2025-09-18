@@ -24,11 +24,18 @@ def _calc_distances(ds, cent, dist_fn, k, threshold):
         
         # 제일 작은 값들의 인덱스 찾아주고, 새로운 k를 위한 공간 만들기
         k_label = np.argmin(distance, axis=1)
+        print(k_label.shape)
+        print()
+        for i in k_label:
+            print(i) # 문제 발견, 싹다 0이다
+        return
+        
         new_cent = np.zeros_like(cent)
         
         # 각 k 군집에 따른 평균 구하기 -> 새로운 센터
         for i in range(k):
             new_cent[i] = np.mean(ds[k_label==i], axis = 0)
+        
         # 수렴
         if np.all(np.abs(new_cent - cent) < threshold):
             break
@@ -44,6 +51,14 @@ def k_means(ds:np.ndarray, dist_fn, k, threshold=0.001):
     
     # 각 센터에 대한 거리 구하기
     clustered_ = _calc_distances(ds, centroid, dist_fn, k, threshold) 
+    # 오류
+    # Mean of empty slice.
+    #   return _methods._mean(a, axis=axis, dtype=dtype,
+    #   py:137: RuntimeWarning: invalid value encountered in divide 
+    #   ret = um.true_divide(
+        
+    # zero division 에러 같은데
+    
     return clustered_
 
 def main():
