@@ -5,7 +5,6 @@ from typing import Tuple
 from sklearn.datasets import make_blobs, make_moons, make_circles, make_s_curve, make_swiss_roll
 import matplotlib.pyplot as plt
 
-
 class Dataset(abc.ABC):
     def __init__(self, n_samples: int, noise: float):
         self.n_samples = n_samples

@@ -1,4 +1,3 @@
-import dataset
 import yaml
 from typing import Tuple
 import numpy as np
@@ -55,6 +54,7 @@ def k_means(ds:np.ndarray, dist_fn, k, threshold=0.001):
     return (points, labels)
 
 def main():
+    import dataset
     np.random.seed(2025)
     with open("config.yaml") as f:
         config = yaml.safe_load(f)
@@ -67,10 +67,12 @@ def main():
 
     dist = Distance.euclidean
     point, label = k_means(points, dist, 3)
-    # point -> Tuple[n_samples, [x, y, k]]
-    datasets_to_plot = []
-    datasets_to_plot.append(("blobs", point, label))
-    dataset.visualization2D(datasets_to_plot, visual_param=config['visual'])
+    # point -> Tuple[n_samples, [x, y,  k]]
+    print(point.shape, label.shape)
+    
+    # datasets_to_plot = []
+    # datasets_to_plot.append(("blobs", point, label))
+    # dataset.visualization2D(datasets_to_plot, visual_param=config['visual'])
     
 if __name__ == "__main__":
     main()
