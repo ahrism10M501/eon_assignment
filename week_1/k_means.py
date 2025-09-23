@@ -41,7 +41,7 @@ def _calc_distances(ds, cent, dist_fn, k, threshold):
             break
         cent = new_cent
         
-    return (ds, k_label)
+    return (ds, k_label, cent)
     
 def k_means(ds:np.ndarray, dist_fn, k, threshold=0.001):
     # ds.shape = [1500, 2] -> [n_samples, 2(x, y)]
@@ -50,8 +50,8 @@ def k_means(ds:np.ndarray, dist_fn, k, threshold=0.001):
     centroid = ds[rand_idx, :] # (3, 2)
     
     # 각 센터에 대한 거리 구하기
-    points, labels = _calc_distances(ds, centroid, dist_fn, k, threshold) 
-    return (points, labels)
+    points, labels, cent = _calc_distances(ds, centroid, dist_fn, k, threshold) 
+    return (points, labels, cent)
 
 def main():
     import dataset
@@ -66,7 +66,7 @@ def main():
     # Tuple[np.ndarray, np.ndarray] = ([n_samples, 2(x, y)], [1500, 0])
 
     dist = Distance.euclidean
-    point, label = k_means(points, dist, 3)
+    point, label, _ = k_means(points, dist, 3)
     # point -> Tuple[n_samples, [x, y,  k]]
     print(point.shape, label.shape)
     

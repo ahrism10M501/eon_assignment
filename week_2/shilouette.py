@@ -9,7 +9,6 @@ import yaml
 from week_1.k_means import k_means, Distance
 
 import matplotlib.pyplot as plt
-import logging
 
 class Silhouette:
     @staticmethod
@@ -76,7 +75,7 @@ def main():
     # Tuple[np.ndarray, np.ndarray] = ([n_samples, 2(x, y)], [1500, 0])
 
     dist = Distance.euclidean
-    point, label = k_means(points, dist, 10)
+    point, label, _ = k_means(points, dist, 10)
     silhouette = Silhouette.getSilhouette(point, dist, label)
     
     # 잼미나이야!!! 도와줘ㅓㅓㅓ
